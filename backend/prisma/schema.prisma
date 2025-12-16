@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id         String   @id @default(cuid())
+  email      String   @unique
+  name       String?
+  avatarUrl  String?
+  provider   String
+  createdAt  DateTime @default(now())
+
+  tests  Test[]
+  votes  Vote[]
+  events Event[]
+}
+
+model Test {
+  id          String     @id @default(cuid())
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String
+  title       String
+  descA       String?
+  descB       String?
+  imageAUrl   String
+  imageBUrl   String
+  status      TestStatus @default(DRAFT)
+  createdAt   DateTime   @default(now())
+  publishedAt DateTime?
+
+  votes  Vote[]
+  events Event[]
+}
+
+model Vote {
+  id        String     @id @default(cuid())
+  test      Test       @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  choice    VoteChoice
+  createdAt DateTime    @default(now())
+
+  @@unique([testId, userId])
+  @@index([testId])
+}
+
+model Event {
+  id        String    @id @default(cuid())
+  test      Test      @relation(fields: [testId], references: [id], onDelete: Cascade)
+  testId    String
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId    String?
+  type      EventType
+  meta      Json?
+  createdAt DateTime  @default(now())
+
+  @@index([testId])
+}
+
+enum TestStatus {
+  DRAFT
+  PUBLISHED
+  CLOSED
+}
+
+enum VoteChoice {
+  A
+  B
+}
+
+enum EventType {
+  VOTE
+  VIEW
+}
