@@ -1,0 +1,11 @@
+---
+Design & Accessibility Rule
+
+When redesigning or generating UI:
+- Use a Spotify-inspired, content-first design approach (dark UI, minimal chrome, strong visual hierarchy).
+- Use a vibrant peach as the primary accent color, applied sparingly to key actions and highlights.
+- Strictly comply with WCAG 2.1 AA accessibility guidelines, including sufficient color contrast, readable typography, visible focus states, keyboard navigation, and non-color-only indicators.
+- Accessibility and usability must never be compromised for visual style.
+
+alwaysApply: true
+---
