@@ -42,7 +42,7 @@ GOOGLE_CLIENT_SECRET="your-google-client-secret"
    ```bash
    cd backend
    npm install
-   # Create .env file with values above
+   # Create .env.local file with values above
    npm run prisma:migrate
    npm run dev
    ```
@@ -51,7 +51,7 @@ GOOGLE_CLIENT_SECRET="your-google-client-secret"
    ```bash
    cd frontend
    npm install
-   # Create .env.local file with values above
+   # Create .env.local.local file with values above
    npm run dev
    ```
 

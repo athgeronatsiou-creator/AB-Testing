@@ -27,6 +27,7 @@ export default function TestsPage() {
   const queryClient = useQueryClient();
   const [selectedImage, setSelectedImage] = useState<{ url: string; alt: string } | null>(null);
   const [initialTestIds, setInitialTestIds] = useState<Set<string>>(new Set());
+  const [hasInitializedTestIds, setHasInitializedTestIds] = useState(false);
   const [newTestIds, setNewTestIds] = useState<Set<string>>(new Set());
   const [votingTestId, setVotingTestId] = useState<string | null>(null);
   const [hasLoadedOnce, setHasLoadedOnce] = useState(false);
@@ -48,19 +49,25 @@ export default function TestsPage() {
     queryKey: ["tests", session?.backendToken],
     queryFn: () => apiFetch<Test[]>("/tests", {}, session?.backendToken),
     enabled: status !== "loading", // Wait for session to load before fetching
+    // This list should stay up-to-date when navigating back to this page.
+    // Our QueryClient defaults keep data fresh for 1 minute, which can prevent
+    // a refetch on client-side navigation; override that here.
+    staleTime: 0,
+    refetchOnMount: "always",
     refetchOnWindowFocus: true, // Refetch when window regains focus (e.g., after refresh)
   });
 
   // Track initial test IDs on first load - these won't show "New" tag
   useEffect(() => {
     if (testsQuery.data) {
-      if (initialTestIds.size === 0) {
-        // First load - set initial IDs
-        const ids = new Set(testsQuery.data.map(t => t.id));
+      if (!hasInitializedTestIds) {
+        // First load - set initial IDs (even if empty) exactly once.
+        const ids = new Set(testsQuery.data.map((t) => t.id));
         setInitialTestIds(ids);
+        setHasInitializedTestIds(true);
       } else {
         // Subsequent loads - find new tests
-        const currentIds = new Set(testsQuery.data.map(t => t.id));
+        const currentIds = new Set(testsQuery.data.map((t) => t.id));
         const newIds = new Set<string>();
         currentIds.forEach((id) => {
           if (!initialTestIds.has(id)) {
@@ -88,7 +95,7 @@ export default function TestsPage() {
         }
       }
     }
-  }, [testsQuery.data, initialTestIds]);
+  }, [testsQuery.data, hasInitializedTestIds, initialTestIds]);
 
   // Track if we've loaded data at least once to prevent re-animation
   useEffect(() => {
@@ -230,7 +237,7 @@ export default function TestsPage() {
                 onClick={() => {
                   signIn("google", { callbackUrl: "/" }).catch((err) => {
                     console.error("Sign in error:", err);
-                    alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local");
+                    alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local.local");
                   });
                 }}
                 className="inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#FF6B6B] px-6 sm:px-8 md:px-10 py-3 sm:py-4 text-sm sm:text-base font-bold text-[#1a1a1a] hover:bg-[#FF8C8C] hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#FF6B6B]/50 transition-all duration-200 ease-out active:scale-95"

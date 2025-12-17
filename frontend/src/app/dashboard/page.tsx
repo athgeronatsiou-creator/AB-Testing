@@ -80,7 +80,7 @@ export default function DashboardPage() {
             onClick={() => {
               signIn("google", { callbackUrl: "/dashboard" }).catch((err) => {
                 console.error("Sign in error:", err);
-                alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local");
+                alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local.local");
               });
             }}
             className="inline-flex items-center gap-2 sm:gap-3 rounded-full bg-[#FF6B6B] px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-[#1a1a1a] hover:bg-[#FF8C8C] hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#FF6B6B]/50 transition-all duration-200 ease-out active:scale-95"

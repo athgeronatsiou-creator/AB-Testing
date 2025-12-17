@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ type Uploaded = { url: string; publicId: string };
 export default function Home() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [title, setTitle] = useState("");
   const [imageA, setImageA] = useState<Uploaded | null>(null);
   const [imageB, setImageB] = useState<Uploaded | null>(null);
@@ -55,7 +57,13 @@ export default function Home() {
         session.backendToken
       );
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      // Ensure the Dashboard list refetches immediately after creation,
+      // regardless of React Query staleTime defaults.
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["my-tests"] }),
+        queryClient.invalidateQueries({ queryKey: ["tests"] }),
+      ]);
       router.push("/dashboard");
     },
     onError: (err: any) => setError(err?.message ?? "Failed to create test"),
@@ -157,7 +165,7 @@ export default function Home() {
               onClick={() => {
                 signIn("google", { callbackUrl: "/create" }).catch((err) => {
                   console.error("Sign in error:", err);
-                  alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local");
+                  alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local.local");
                 });
               }}
               className="rounded-full bg-[#FF6B6B] px-6 sm:px-8 py-3 sm:py-4 text-sm sm:text-base font-bold text-[#1a1a1a] hover:bg-[#FF8C8C] hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#FF6B6B]/50 transition-all duration-300 ease-out active:scale-95 disabled:shadow-none"

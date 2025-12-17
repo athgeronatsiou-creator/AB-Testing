@@ -7,9 +7,9 @@ SECRET="KBT7PdGgh556WcdASig1YKE4Rp8EnM8/xnZsqWFSWsM="
 echo "🔧 Setting up environment variables..."
 echo ""
 
-# Frontend .env.local
+# Frontend .env.local.local
 if [ ! -f "frontend/.env.local" ]; then
-  cat > frontend/.env.local << EOF
+  cat > frontend/.env.local.local << EOF
 # API Configuration
 NEXT_PUBLIC_API_URL="http://localhost:4000/api"
 NEXT_PUBLIC_SOCKET_URL="http://localhost:4000"
@@ -28,9 +28,9 @@ else
   echo "⚠️  frontend/.env.local already exists - not overwriting"
 fi
 
-# Backend .env
+# Backend .env.local
 if [ ! -f "backend/.env" ]; then
-  cat > backend/.env << EOF
+  cat > backend/.env.local << EOF
 # Database
 DATABASE_URL="postgresql://postgres:postgres@localhost:5432/ab_testing"
 
@@ -50,8 +50,8 @@ EOF
   echo "✅ Created backend/.env"
 else
   echo "⚠️  backend/.env already exists - checking JWT_SECRET..."
-  if ! grep -q "JWT_SECRET" backend/.env; then
-    echo "JWT_SECRET=\"${SECRET}\"" >> backend/.env
+  if ! grep -q "JWT_SECRET" backend/.env.local; then
+    echo "JWT_SECRET=\"${SECRET}\"" >> backend/.env.local
     echo "✅ Added JWT_SECRET to backend/.env"
   else
     echo "⚠️  JWT_SECRET already exists in backend/.env"

@@ -92,7 +92,7 @@ export function Navigation() {
               onClick={() => {
                 signIn("google", { callbackUrl: "/" }).catch((err) => {
                   console.error("Sign in error:", err);
-                  alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local");
+                  alert("Sign in failed. Please check that Google OAuth credentials are configured in .env.local.local");
                 });
               }}
               className="rounded-full bg-[#FF6B6B] px-4 sm:px-6 py-1.5 sm:py-2 text-xs sm:text-sm font-bold text-[#1a1a1a] hover:bg-[#FF8C8C] hover:scale-105 focus:outline-none focus:ring-4 focus:ring-[#FF6B6B]/50 transition-all duration-300 ease-out active:scale-95"

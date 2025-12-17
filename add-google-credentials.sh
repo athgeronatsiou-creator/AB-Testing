@@ -31,7 +31,7 @@ if [ -z "$CLIENT_ID" ] || [ -z "$CLIENT_SECRET" ]; then
     exit 1
 fi
 
-# Update frontend/.env.local
+# Update frontend/.env.local.local
 ENV_FILE="frontend/.env.local"
 
 if [ ! -f "$ENV_FILE" ]; then
