@@ -1,0 +1,9 @@
+# Deploy backend only when pushing repo root to Heroku.
+frontend/
+images/
+infra/
+.idea/
+.cursor/
+.next/
+**/.env*
+**/node_modules/
